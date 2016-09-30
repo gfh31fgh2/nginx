@@ -12,6 +12,7 @@ RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
     echo "${TIMEZONE}" > /etc/timezone && \
     apt-get install -y --force-yes \
             openssl \
+	    nano \
             nginx \
             --no-install-recommends && \
             apt-get clean && \
