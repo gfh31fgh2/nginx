@@ -10,11 +10,9 @@ RUN apt-get update
 # Installing NGINX
 RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
     echo "${TIMEZONE}" > /etc/timezone && \
-    apt-get install -y --force-yes \
+    apt-get install -y --allow-downgrades --no-install-recommends \
             openssl \
-	    nano \
-            nginx \
-            --no-install-recommends && \
+            nginx && \
             apt-get clean && \
             chown -R www-data.www-data /var/lib/nginx && \
             echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
@@ -28,16 +26,18 @@ RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
         -days 365 \
         -nodes \
         -subj /CN=docker && \
-    mkdir /www 
-
+    mkdir /www
 # Define mountable directories.
-VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/home/www"]
-            
+# VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/home/www"]
+
 # Runit Nginx service
 ADD nginx.sh /etc/service/nginx/run
 
-# Disable ipv6
-ADD ipv6off.sh /etc/rc.local
+# Make executable run file
+RUN chmod 700 /etc/service/nginx/run
+
+# Disable ipv6 - if you need it
+# ADD ipv6off.sh /etc/rc.local
 
 # Use baseimage-dockers init system.
 CMD ["/sbin/my_init"]
