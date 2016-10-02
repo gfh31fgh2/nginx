@@ -12,7 +12,8 @@ RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
     echo "${TIMEZONE}" > /etc/timezone && \
     apt-get install -y --allow-downgrades --no-install-recommends \
             openssl \
-            nginx && \
+            nginx \ 
+	    nano && \
             apt-get clean && \
             chown -R www-data.www-data /var/lib/nginx && \
             echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
